@@ -32,9 +32,14 @@ async def on_message(message):
     msg = message.content
 
     if msg.startswith('!stock'):
-        msg = msg.split(" ")
-        price = bottasks.Stock(msg[1]).quote()['05. price']
-        await message.channel.send(f'Price for {msg[1].upper()} is {price}!')
+        query = msg.split(" ")
+        response = bottasks.Finance(query[1]).quote_stock()
+        await message.channel.send(response)
+
+    if msg.startswith('!crypto'):
+        query = msg.split(" ")
+        response = bottasks.Finance(query[1]).quote_crypto()
+        await message.channel.send(response)
 
     if msg.startswith('!bingo score'):
         scores = bottasks.Bingo(bingo_words, scored_words, score).scores()

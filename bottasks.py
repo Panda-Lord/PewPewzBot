@@ -34,17 +34,47 @@ class Bingo():
     def cross(self, word):
         return "BINGO!"
 
-class Stock():
+class Finance():
 
-    def __init__(self, stock):
-        self.stock = stock
+    def __init__(self, symbol, symbol_two = 'USD'):
+        self.symbol = symbol
+        self.symbol_two = symbol_two
         self.api_key = os.getenv('API_KEY')
 
-    def quote(self):
+    def response(self, status):
+        if status != 200:
+            return False
+        return True
+
+    def quote_stock(self):
         url = 'https://www.alphavantage.co/query?'
+        response = requests.get(f'{url}function=GLOBAL_QUOTE&symbol={self.symbol}&apikey={self.api_key}')
 
-        response = requests.get(f'{url}function=GLOBAL_QUOTE&symbol={self.stock}&apikey={self.api_key}')
+        if not self.response(response.status_code):
+            return "Whoops, that didn't work!"
 
-        return response.json()['Global Quote']
+        response = response.json().get('Global Quote')
 
-        
+        if not response:
+            return "Try different abbrevation?"
+        else:
+            response = response['05. price']
+            response = f'Price for {self.symbol.upper()} is {response} USD!'
+            return response
+
+    def quote_crypto(self):
+        url = 'https://www.alphavantage.co/query?'
+        response = requests.get(f'{url}function=CURRENCY_EXCHANGE_RATE&from_currency={self.symbol}&to_currency={self.symbol_two}&apikey={self.api_key}')
+
+        if not self.response(response.status_code):
+            return "Whoops, that didn't work!"
+
+        response = response.json().get('Realtime Currency Exchange Rate')
+
+        if not response:
+            return "Try different abbrevation?"
+        else:
+            response = response['5. Exchange Rate']
+            response = f'Price for {self.symbol.upper()} is {response} {self.symbol_two}!'
+            return response
+
