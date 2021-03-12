@@ -1,24 +1,13 @@
 import discord
 import os
 import bottasks
+import db
 from dotenv import load_dotenv
 load_dotenv(verbose=True)
 from pathlib import Path
 env_path = Path('.') / '.env'
 
 client = discord.Client()
-
-bingo_words = [
-    "DeFi",
-    "Decentralised",
-    "Habitat",
-    "DAO",
-    "Etherum"
-]
-
-scored_words = []
-
-score = 0
 
 @client.event
 async def on_ready():
@@ -30,6 +19,18 @@ async def on_message(message):
         return
     
     msg = message.content
+    bingo = bottasks.Bingo()
+
+    if msg.startswith('!help'):
+        help = [
+                'PewPewzBot is here to help!',
+                '!stock GME - price of GameStop',
+                '!crype BTC - price of BitCoin',
+                '!bingo score - Current bingo scores',
+                '!bingo add word - Adds "word" to bingo game',
+                '!bingo info word - Gives info on "word"'
+        ]
+        await message.channel.send("\n".join(help))
 
     if msg.startswith('!stock'):
         query = msg.split(" ")
@@ -38,23 +39,25 @@ async def on_message(message):
 
     if msg.startswith('!crypto'):
         query = msg.split(" ")
-        response = bottasks.Finance(query[1]).quote_crypto()
-        await message.channel.send(response)
+        await message.channel.send(bottasks.Finance(query[1]).quote_crypto())
 
     if msg.startswith('!bingo score'):
-        scores = bottasks.Bingo(bingo_words, scored_words, score).scores()
-        await message.channel.send(scores)
+        await message.channel.send(bingo.scores())
 
-    elif msg.startswith('!bingo'):
-        await message.channel.send('Bingo!')
+    elif msg.startswith('!bingo add'):
+        query = msg.split(" ")
+        await message.channel.send(bingo.add(query[2]))
 
-    for word in bingo_words:
-        if word.lower() in map(lambda w: w.lower(), msg.split(" ")):
-            if word in scored_words:
-                await message.channel.send(f'Bingo! You already had "{word}" though.')
-            else:
-                cross = bottasks.Bingo(bingo_words, scored_words, score).cross(word)
-                scored_words.append(word)
-                await message.channel.send(cross)
+    elif msg.startswith('!bingo info'):
+        query = msg.split(" ")
+        await message.channel.send(bingo.info(query[2]))
+
+    elif msg.startswith('!bingo reset'):
+        await message.channel.send(bingo.reset())
+
+    elif bingo.bingo_words:
+        for word in bingo.bingo_words:
+            if word[0].lower() in map(lambda w: w.lower(), msg.split(" ")):
+                await message.channel.send(bingo.cross(word[0]))
 
 client.run(os.getenv('TOKEN'))
