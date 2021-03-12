@@ -72,6 +72,20 @@ def insert_bingo_words(word):
     finally:
         disconnect(con)
 
+def remove_bingo_words(word):
+    sql = "DELETE FROM wordbingo WHERE bingo_word = %s;"
+    con = None
+    try:
+        con = connect()
+        cursor = con.cursor()
+        cursor.execute(sql, (word,))
+        cursor.close()
+        con.commit()
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        disconnect(con)
+
 def get_bingo_words():
     con = None
     try:

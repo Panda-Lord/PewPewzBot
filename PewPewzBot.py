@@ -28,7 +28,8 @@ async def on_message(message):
                 '!crype BTC - price of BitCoin',
                 '!bingo score - Current bingo scores',
                 '!bingo add word - Adds "word" to bingo game',
-                '!bingo info word - Gives info on "word"'
+                '!bingo info word - Gives info on "word"',
+                '!bingo remove word - Removes "word" from the game'
         ]
         await message.channel.send("\n".join(help))
 
@@ -51,6 +52,10 @@ async def on_message(message):
     elif msg.startswith('!bingo info'):
         query = msg.split(" ")
         await message.channel.send(bingo.info(query[2]))
+
+    elif msg.startswith('!bingo remove'):
+        query = msg.split(" ")
+        await message.channel.send(bingo.remove(query[2]))
 
     elif msg.startswith('!bingo reset'):
         await message.channel.send(bingo.reset())

@@ -53,8 +53,23 @@ class Bingo():
         return f'!BINGO is reset!'
 
     def add(self, word):
-        db.insert_bingo_words(word)
-        return f'{word} added! {len(self.bingo_words) + 1} words in the !BINGO'
+        if not db.get_bingo_result(word):
+            db.insert_bingo_words(word)
+            return f'{word} added! {len(self.bingo_words) + 1} words in the !BINGO'
+        return 'Already in'
+
+    def remove(self, word):
+        if db.get_bingo_result(word):
+            db.remove_bingo_words(word)
+            if db.count_bingo_words(True) == db.count_all_bingo_words():
+                self.bingo_words = db.get_bingo_words()
+                response = [f'You cheating bastard!']
+                response.extend(self.score_list())
+                response.append(f'Game over! Game has been reset')
+                self.reset()
+                return "\n".join(response)
+            return f'{word} removed! {len(self.bingo_words) - 1} words in the !BINGO'
+        
 
 class Finance():
 
