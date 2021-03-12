@@ -30,6 +30,7 @@ class Bingo():
             response.extend(self.score_list())
             response.append(f'{db.count_bingo_words(False)} left to go!')
             return "\n".join(response)
+        return "Nothing yet. Add some words."
 
     def cross(self, word):
         if self.bingo_words:

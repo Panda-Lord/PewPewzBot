@@ -18,6 +18,7 @@ def disconnect(con):
         con.close()
 
 def create_database():
+    con = None
     try:
         con = connect()
         con.set_isolation_level(ISOLATION_LEVEL_AUTOCOMMIT)
