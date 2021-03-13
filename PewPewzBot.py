@@ -35,6 +35,14 @@ async def on_message(message):
         ]
         await message.channel.send("\n".join(help))
 
+    if message.content.startswith('!pixelplanet'):
+        planet = bottasks.random_pixel_planet()
+        embedVar = discord.Embed(title=f'{planet[1]}{" "*5}{planet[0]}', description=planet[3], color=planet[6], url=planet[2])
+        embedVar.add_field(name="Pupulation", value=planet[4], inline=True)
+        embedVar.add_field(name="Temperature", value=planet[5], inline=True)
+        embedVar.set_image(url=planet[2]+'.gif')
+        await message.channel.send(embed=embedVar)
+
     if msg.startswith('!stock'):
         query = msg.split(" ")
         response = bottasks.Finance(query[1]).quote_stock()
@@ -45,9 +53,6 @@ async def on_message(message):
         if len(query) == 2:
             query.append('USD')
         await message.channel.send(bottasks.Finance(query[1], query[2]).quote_price())
-
-    elif msg.startswith('!pixelplanet'):
-        await message.channel.send(bottasks.random_planet())
 
     elif msg.startswith('!bingo score'):
         await message.channel.send(bingo.scores())
