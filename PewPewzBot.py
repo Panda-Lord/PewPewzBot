@@ -8,6 +8,7 @@ from pathlib import Path
 env_path = Path('.') / '.env'
 
 client = discord.Client()
+db.db_test()
 
 @client.event
 async def on_ready():
@@ -24,8 +25,9 @@ async def on_message(message):
     if msg.startswith('!help'):
         help = [
                 'PewPewzBot is here to help!',
-                '!stock GME - price of GameStop',
-                '!crype BTC - price of BitCoin',
+                '!stock GME - Stock prices, GME = GameStop for example',
+                '!price BTC USD - Currency exchange, BTC = BitCoin for example. Second currency optional, default to USD',
+                '!pixelplanet - Get a random pixel planet. WHy not?'
                 '!bingo score - Current bingo scores',
                 '!bingo add word - Adds "word" to bingo game',
                 '!bingo info word - Gives info on "word"',
@@ -38,11 +40,16 @@ async def on_message(message):
         response = bottasks.Finance(query[1]).quote_stock()
         await message.channel.send(response)
 
-    if msg.startswith('!crypto'):
+    elif msg.startswith('!price'):
         query = msg.split(" ")
-        await message.channel.send(bottasks.Finance(query[1]).quote_crypto())
+        if len(query) == 2:
+            query.append('USD')
+        await message.channel.send(bottasks.Finance(query[1], query[2]).quote_price())
 
-    if msg.startswith('!bingo score'):
+    elif msg.startswith('!pixelplanet'):
+        await message.channel.send(bottasks.random_planet())
+
+    elif msg.startswith('!bingo score'):
         await message.channel.send(bingo.scores())
 
     elif msg.startswith('!bingo add'):

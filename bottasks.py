@@ -1,7 +1,7 @@
-
 import requests
 import os
 import db
+import scrape
 from dotenv import load_dotenv
 from pathlib import Path
 from datetime import datetime
@@ -84,6 +84,9 @@ class Finance():
             return False
         return True
 
+    def multiply_price(self, price, multi):
+        return str(float(price) * multi)
+
     def quote_stock(self):
         url = 'https://www.alphavantage.co/query?'
         response = requests.get(f'{url}function=GLOBAL_QUOTE&symbol={self.symbol}&apikey={self.api_key}')
@@ -96,10 +99,12 @@ class Finance():
             response = response['05. price']
             response = response.split(".")
             response = f"{response[0]}.{response[1][:2]}"
+            if self.symbol.lower() == "gme":
+                response = self.multiply_price(response, 2)
             response = f'Price for {self.symbol.upper()} is {response} USD!'
             return response
 
-    def quote_crypto(self):
+    def quote_price(self):
         url = 'https://www.alphavantage.co/query?'
         response = requests.get(f'{url}function=CURRENCY_EXCHANGE_RATE&from_currency={self.symbol}&to_currency={self.symbol_two}&apikey={self.api_key}')
         if not self.response(response.status_code):
@@ -114,3 +119,11 @@ class Finance():
             response = f'Price for {self.symbol.upper()} is {response} {self.symbol_two}!'
             return response
 
+# class Pixel_Planets():
+
+#     def __init__(self):
+
+def random_planet():
+    planet = scrape.scrape_pixel_random()
+    response = f'{planet[0]}\n{planet[1]}\n- - -\n{planet[3]}\n\nPopulation: {planet[4]}\nPopulation: {planet[5]}\n\n{planet[2]}'
+    return response

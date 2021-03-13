@@ -8,14 +8,34 @@ from datetime import datetime
 
 load_dotenv(verbose=True)
 
-
 def connect():
-    con = psycopg2.connect(f'user={getenv("POSTGRESS_USER")} password={getenv("POSTGRES_PASS")}')
+    con = psycopg2.connect(
+        host="localhost",
+        database="discordbot",
+        user=getenv("POSTGRES_USER"),
+        password=getenv("POSTGRES_PASS")
+        )
     return con
 
 def disconnect(con):
     if con is not None:
         con.close()
+
+def db_test():
+    con = None
+    try:
+        con = psycopg2.connect(
+            host="localhost",
+            user=getenv("POSTGRES_USER"),
+            password=getenv("POSTGRES_PASS")
+            )
+        cursor = con.cursor()
+        cursor.close()
+        print('DB Connected')
+    except (Exception, psycopg2.DatabaseError) as error:
+        print(error)
+    finally:
+        disconnect(con)   
 
 def create_database():
     con = None
