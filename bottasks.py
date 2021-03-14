@@ -70,6 +70,7 @@ class Bingo():
                 self.reset()
                 return "\n".join(response)
             return f'{word} removed! {len(self.bingo_words) - 1} words in the !BINGO'
+        return 'No such word !Bingo'
         
 
 class Finance():

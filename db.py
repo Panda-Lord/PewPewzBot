@@ -127,9 +127,9 @@ def get_bingo_result(word):
         con = connect()
         cursor = con.cursor()
         cursor.execute("SELECT bingo_word, bingo_scored, bingo_stamp FROM wordbingo WHERE bingo_word = %s", (word,))
-        words = cursor.fetchone()
+        word = cursor.fetchone()
         cursor.close()
-        return words
+        return word
     except (Exception, psycopg2.DatabaseError) as error:
         print(error)
     finally:
