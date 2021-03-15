@@ -63,7 +63,7 @@ async def on_message(message):
             embedVar.set_image(url=planet["url"]+'.gif')
             await message.channel.send(embed=embedVar)
         else:
-            await message.channel.send("Doesn't seem to be a Pixel Planet. try again babes!")      
+            await message.channel.send("Doesn't seem to be a Pixel Planet. Try again babes!")      
 
     elif message.content.startswith('!depicted'):
         query = msg.split(" ")
@@ -78,15 +78,18 @@ async def on_message(message):
             depict = bottasks.depicted(query[1])
         else:
             depict = bottasks.depicted()
-        if colour:
-            image, color = depict['color']
+        if depict:
+            if colour:
+                image, color = depict['color']
+            else:
+                image, color = depict['black']
+            depicted_url = depict['http'] + depict['site']
+            embedVar = discord.Embed(title=depict['depict'], color=color, url= depicted_url + depict['depict'])
+            embedVar.set_image(url=depicted_url + image)
+            embedVar.set_footer(text=depict['site'] + depict['depict'])
+            await message.channel.send(embed=embedVar)
         else:
-            image, color = depict['black']
-        depicted_url = depict['http'] + depict['site']
-        embedVar = discord.Embed(title=depict['depict'], color=color, url= depicted_url + depict['depict'])
-        embedVar.set_image(url=depicted_url + image)
-        embedVar.set_footer(text=depict['site'] + depict['depict'])
-        await message.channel.send(embed=embedVar)
+            await message.channel.send("Don't think we have this one yt. Try again babes!")
 
     elif msg.startswith('!stock'):
         query = msg.split(" ")

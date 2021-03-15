@@ -9,10 +9,10 @@ def rarity_color(rarity_classes=None):
         'rare': 0x1E4ED1,
         'common': 0x6e7c7c,
     }
-
     for rarity_class in rarity_classes:
         if rarity_class in rarity_table.keys():
             rarity = rarity_table[rarity_class]
+            return rarity
         else:
             rarity = rarity_table['common']
     return rarity
@@ -57,7 +57,10 @@ def scrape_depicted(depict):
     http = 'https://www.'
     site = 'thedepicted.com/'
     depict = depict.lower()
-    html = BeautifulSoup(requests.get(http+site+depict).text, "html.parser")
+    response = requests.get(http+site+depict)
+    if response.status_code == 404:
+        return False
+    html = BeautifulSoup(response.text, "html.parser")
     pictures = html.find('figure', {'class': 'image'}).find_all('picture')
     black = pictures[0].find('img')['src']
     color = pictures[1].find('img')['src']
