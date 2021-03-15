@@ -120,5 +120,14 @@ class Finance():
             response = f'Price for {self.symbol.upper()} is {response} {self.symbol_two}!'
             return response
 
-def random_pixel_planet():
-    return scrape.scrape_pixel_random()
+def pixel_planet(planet=None):
+    if planet:
+        return scrape.scrape_pixel_planet(planet)
+    else:
+        return scrape.scrape_pixel_random()
+
+def depicted(depict=None):
+    if depict:
+        return scrape.scrape_depicted(depict)
+    else:       
+        return scrape.scrape_depicted_random()
