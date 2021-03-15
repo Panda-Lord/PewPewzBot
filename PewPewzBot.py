@@ -18,7 +18,9 @@ async def on_ready():
 
 @client.event
 async def on_message(message):
-    if message.author == client.user:
+    # if message.author == client.user:
+    #     return
+    if message.author.bot:
         return
     
     msg = message.content
@@ -29,6 +31,12 @@ async def on_message(message):
                 'PewPewzBot is here to help!',
                 '!bingo enable/disable - enables/disables bingo game',
         ]
+        if bingo_status:
+                help.extend([
+                    '!bingo add word - Adds "word" to bingo game',
+                    '!bingo remove word - Removes "word" from the game',
+                    '!bingo reset - Reset the bingo game, but not the words'
+            ])
         await message.channel.send("\n".join(help))
 
     elif msg.startswith('!help'):
@@ -42,11 +50,9 @@ async def on_message(message):
                 '!depicted bread - Get depicted poster for bread. !depicted colour bread for coloured version',
         ]
         if bingo_status:
-                help.append([
+                help.extend([
                     '!bingo score - Current bingo scores',
-                    '!bingo add word - Adds "word" to bingo game',
                     '!bingo info word - Gives info on "word"',
-                    '!bingo remove word - Removes "word" from the game'
             ])
         await message.channel.send("\n".join(help))
 
@@ -89,7 +95,7 @@ async def on_message(message):
             embedVar.set_footer(text=depict['site'] + depict['depict'])
             await message.channel.send(embed=embedVar)
         else:
-            await message.channel.send("Don't think we have this one yt. Try again babes!")
+            await message.channel.send("Don't think we have this one yet. Try again babes!")
 
     elif msg.startswith('!stock'):
         query = msg.split(" ")
@@ -125,7 +131,7 @@ async def on_message(message):
         if msg.startswith('!bingo score'):
             await message.channel.send(bingo.scores())
 
-        elif msg.startswith('!bingo add'):
+        elif msg.startswith('!bingo add') and message.author.guild_permissions.administrator:
             query = msg.split(" ")
             await message.channel.send(bingo.add(query[2]))
 
@@ -133,11 +139,11 @@ async def on_message(message):
             query = msg.split(" ")
             await message.channel.send(bingo.info(query[2]))
 
-        elif msg.startswith('!bingo remove'):
+        elif msg.startswith('!bingo remove') and message.author.guild_permissions.administrator:
             query = msg.split(" ")
             await message.channel.send(bingo.remove(query[2]))
 
-        elif msg.startswith('!bingo reset'):
+        elif msg.startswith('!bingo reset') and message.author.guild_permissions.administrator:
             await message.channel.send(bingo.reset())
 
         elif bingo.bingo_words:
