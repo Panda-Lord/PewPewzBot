@@ -62,11 +62,14 @@ async def on_message(message):
             planet = bottasks.pixel_planet(query[1])
         else:
             planet = bottasks.pixel_planet()
+        print(planet)
         if planet:
-            embedVar = discord.Embed(title=f'{planet["name"]}{" "*5}{planet["number"]}', description=planet["content"], color=planet["rarity"], url=planet["url"])
-            embedVar.add_field(name="Pupulation", value=planet["population"], inline=True)
+            embedVar = discord.Embed(title=f'{planet["name"]}{" "*1}{planet["number"]}', description=planet["content"], color=planet["rarity"], url=planet["url"])
+            embedVar.add_field(name="Population", value=planet["population"], inline=True)
             embedVar.add_field(name="Temperature", value=planet["temperature"], inline=True)
             embedVar.set_image(url=planet["url"]+'.gif')
+            if planet["owner"]:
+                embedVar.set_author(name=planet["owner"], url=planet["owner_url"], icon_url=planet["owner_icon"])
             await message.channel.send(embed=embedVar)
         else:
             await message.channel.send("Doesn't seem to be a Pixel Planet. Try again babes!")      
