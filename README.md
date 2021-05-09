@@ -6,13 +6,12 @@ It is able to do below as of 15.03.21:
 
 ## General commands & use
 
-* `!help` - Shows list of commands
-* `!stock GME` - Stock prices, GME = GameStop for example
-* `!price BTC USD` - Currency exchange, BTC = BitCoin for example. Second currency optional, default is USD'
-* `!pixelplanet` - Scrapes and sends random pixel planet from https://www.mypixelplanet.com/
-* `!pixelplanet planet_name` - scraps a specific planet.
-* `!depicted` - Scrapes and sends random word poster from https://www.thedepicted.com/. Try `!depicted colour` for coloured version
-* `!depicted word` - scraps a specific word. Try `!depicted colour word` for coloured version.
+* `!pewpewz` - Shows list of commands
+* `!stock GME` - Stock prices, GME = GameStop for example',
+* `!price BTC USD` - Currency exchange, BTC = BitCoin for example. Second currency optional, default to USD',
+* `!cryptochickz` - Get a random CryptoChick info. Add number parameter for specicif chick (`!cryptochickz #1`)',
+* `!pixelplanet` - Get a random pixel planet info. Add name parameter for specici planet (`!pixelplanet Earth`)',
+* `!depicted` - Get random depicted poster. !depicted colour for coloured version. Add name parameter for specici planet (`!depicted bread` or `!depicted colour bread`)'
 * `!bingo score` - Current bingo scores
 * `!bingo info word` - Gives info on "word"
 * bingo game checks over the messages looking for added keywords and crosses them off in the process. Game reset on completion.
