@@ -2,20 +2,31 @@ import requests
 import random
 from bs4 import BeautifulSoup
 
-def rarity_color(rarity_classes=None):
+def rarity_color(html_classes=None):
     rarity_table = {
         'legendary': 0xFFDA87,
         'epic': 0x9400D3,
         'rare': 0x1E4ED1,
         'common': 0x6e7c7c,
     }
-    for rarity_class in rarity_classes:
-        if rarity_class in rarity_table.keys():
-            rarity = rarity_table[rarity_class]
+    for html_class in html_classes:
+        if html_class in rarity_table.keys():
+            rarity = rarity_table[html_class]
             return rarity
         else:
             rarity = rarity_table['common']
     return rarity
+
+def chickz_color(html_class):
+    colors = {
+        'champagne': 0xf4eea9, 
+        'pewter': 0x93a8ac, 
+        'bone': 0xe1dabd, 
+        'pink': 0xffd3da, 
+        'turquoise': 0xb3dec1, 
+        'spaceblue': 0x27254a
+        }
+    return colors[html_class]
 
 def scrape_pixel_random():
     url = 'https://www.mypixelplanet.com/'
@@ -66,7 +77,6 @@ def scrape_pixel_planet(planet):
     owner = None
     owner_url = None
     owner_icon = None
-    print(owner_info)
     if owner_info:
         owner = owner_info.find('a').text
         owner_url = owner_info.find('a')['href']
@@ -95,6 +105,43 @@ def scrape_depicted_random():
     depict = depict[1:-1]
     return scrape_depicted(depict)
 
+def scrape_crypto_chickz(chick):
+    url = "https://cryptochickz.com"
+    scrape_url = f"{url}/chickz/cryptochickz-{chick}/"
+    html = BeautifulSoup(requests.get(scrape_url).text, "html.parser")
+    image = url + html.find('div', {'class': 'image-wrapper'}).find('img')['src']
+    breed = html.find('span', {'class': 'tag is-light mr-2'}).text
+    accesory = None
+    if accesory:
+        accesory = html.find('span', {'class': 'tag is-light'}).text
+    content = html.find('div', {'class': 'content'}).text
+    color = html.find('figure', {'class': 'image'})['class'][1]
+    color = chickz_color(color.split("-")[0])
+    # background_image = Image.new('RHB', (320,320), color)
+    # background_image.paste(chicken_image, mask=chicken_image)
+    owner_info = html.find('span', {'class': 'tag is-light is-rounded is-medium'})
+    owner = None
+    owner_url = None
+    owner_icon = None
+    if owner_info:
+        owner = owner_info.find('a').text
+        owner_url = owner_info.find('a')['href']
+        owner_icon = owner_info.find('img', {'class': 'is-rounded'})['src']
+    return {'name': f"#{chick}", 'content': content, 'color': color, 'url': scrape_url, 'image': image, 'breed': breed, 'accesory': accesory, 'owner': owner, 'owner_url': owner_url, 'owner_icon': owner_icon}
+    
+
+def scrape_random_crypto_chickz():
+    url = 'https://cryptochickz.com/catalogue'
+    html = BeautifulSoup(requests.get(url).text, "html.parser")
+    last_page = html.find('ul', {'class': 'pagination-list'}).find_all('li')[-1].text
+    page = random.randint(1, int(last_page))
+    if page == 1: page = ""
+    html = BeautifulSoup(requests.get(f"{url}/{page}").text, "html.parser")
+    html = html.find('main').find('div', {'class': 'columns is-multiline is-mobile'})
+    chickz = html.find_all('a')
+    chick = random.choice(chickz)["href"].split("-")[1].replace("/", "")
+    return scrape_crypto_chickz(chick)
+
 if __name__ == '__main__':
-    scrape = scrape_pixel_random()
+    scrape = scrape_random_crypto_chickz()
     print(scrape)

@@ -13,7 +13,6 @@ class Bingo():
 
     def __init__(self):
         self.bingo_words = db.get_bingo_words()
-        # self.score = score
 
     def score_list(self):
         response = []
@@ -102,7 +101,7 @@ class Finance():
             response = f"{response[0]}.{response[1][:2]}"
             if self.symbol.lower() == "gme":
                 response = self.multiply_price(response, 2)
-            response = f'Price for {self.symbol.upper()} is {response} USD!'
+            response = f'Last closing price for {self.symbol.upper()} is {response} USD!'
             return response
 
     def quote_price(self):
@@ -131,3 +130,9 @@ def depicted(depict=None):
         return scrape.scrape_depicted(depict)
     else:       
         return scrape.scrape_depicted_random()
+
+def crypto_chickz(chick=None):
+    if chick:
+        return scrape.scrape_crypto_chickz(chick)
+    else:       
+        return scrape.scrape_random_crypto_chickz()
